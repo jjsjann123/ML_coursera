@@ -1,0 +1,19 @@
+Learning approach
+
+1. supervised learning
+  Regression
+    -> predict a continuous output
+  Classification
+    -> predict a discrete output
+
+features/attributes
+
+2. un-supervised
+  Clustering
+  Non-clustering
+    -> cocktail party problem
+
+
+Framework
+  GNU Octave
+    -> learning tool / prototype tool
