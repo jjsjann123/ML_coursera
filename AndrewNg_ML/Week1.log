@@ -17,3 +17,20 @@ features/attributes
 Framework
   GNU Octave
     -> learning tool / prototype tool
+
+========================================
+
+Model Representation
+
+1. hypothesis
+  h_theta(x)
+    Training Set
+	       |
+	Learning Algorithm
+		   |
+	hypothesis (maps from input to output)
+	
+	Input --> hypothesis --> prediction
+
+2. cost function
+  J(theta)	
