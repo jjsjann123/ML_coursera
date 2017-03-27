@@ -1,0 +1,17 @@
+Gradient descent:
+  Theta_j := Theta_j - alpha * J(theta) derivative theta
+  req: simultaneous update to all feature. 
+  * alpha -> learning rate
+  * derivative -> J(theta) d_theta
+
+  converge with fixed learning rate (alpha)
+    since derivative actually reduce through iteration.
+
+  drawbacks:
+    converges to local optimization instead of global optimization
+
+  "Batch" Gradient Descent:
+    each step uses all training examples
+  
+  compare to solving for optimal:
+    Gradient descent actually scales better

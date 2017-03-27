@@ -1,0 +1,82 @@
+Standard example of machine learning
+----------Simple models of neurons--------------------------------------
+  MNIST database
+
+  Beyong MNIST -> ImageNet
+
+  speach recognition
+
+----------Simple models of neurons--------------------------------------
+  i. linear neurons
+    y = b + sum_i(x_i * w_i)
+    where as,
+      b - bias
+      x - input
+      w - weight
+
+  ii. binary threshold neurons
+    send out a fixed size spike of activity if the weighted sum exceeds
+a threshold.
+    z = sum_i(x_i * w_i)
+    y = 1, if z > threshold
+        0, otherwise
+  
+  iii. rectified linear neurons
+    z = sum_i(x_i * w_i)
+    y = z, if z > threshold
+        0, otherwise
+  
+  iv. sigmoid neurons
+    z = b + sum_i(x_i * w_i)
+    y = 1 / (1 + e^(-z))
+    * smooth derivatives -> easy learning
+
+  v. stochastic binary neurons 
+    e.g.
+      z = b + sum_i(x_i * w_i)
+      p(y = 1) = 1 / (1 + e^(-z))
+    we can do similar tricks for other z function.
+    
+-----------Simple example of Learning-----------------------------------
+handwriting recognition.
+  i. 2 layers of neurons
+    top_layers    - represent known shapes
+    bottom_layers - represent pixel intensities
+
+  ii. each pixel vote if it has "ink" in it.
+
+  iii. feed training examples to update the weights
+
+  * simple learning algorithm is insufficient
+    2 layer networks is equivalent to having a rigid pattern
+
+-----------Three types of learning--------------------------------------
+1. Supervised learning
+  Learn to predict an output when given a input vector
+  2 categories:
+    i. regression
+    ii. classification
+
+    y = f(x; W)
+    where as:
+      Model-class f
+      numerical parameters W
+      input vector x
+      predicted output y
+
+  fit -> adjusting parameters to reduce the discrepancy between the
+target output t, to the actual output y.
+
+2. Reinforcement learning (difficult/ not covered)
+  Learn to select an action to maximize payoff
+  output is
+    an action or sequence of actions
+  supervisory signal
+    occasional scalar reward
+
+3. Unsupervised learning
+  Discover a good internal representation of the input
+    * provides compact, low-dimensional representation of the input.
+    * provides economical high-dimensional representation of the input
+      in terms of learned features.
+

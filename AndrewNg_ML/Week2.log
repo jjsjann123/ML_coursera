@@ -1,0 +1,90 @@
+========================================================================
+1. Multivariate Linear Regression
+
+------------------------------------------------------------------------
+  i. Multiple Features
+    n     -> the number of features
+    m     -> the number of training examples
+    x(i)j -> value of feature j in the ith training example
+    
+  ii. h_theta(x) = Transpose(theta) * x
+    let x(i)0 = 1;
+
+------------------------------------------------------------------------
+  iii. Gradient Descent
+    J(theta) = 1/2m * sum_i( (h_theta(x(i)) - y(i)) ^ 2 ) 
+    
+    griedient descent algorithm
+    Repeat:
+    theta_j := theta_j - alpha * 1/m sum_i ((h_theta(x(i)) - y(i)) ^ 2 ) 
+
+      alpha -> learning rate. 
+      alpha * (partial derivative)
+
+  iv. Feature Scaling
+    if x_q, x_k has different scale
+      -> theta_q, theta_k might differ a lot, GD takes lots of iteration
+before it reaches minimum.
+    
+    Get every feature into approximately a -1 <= x_i <= 1 range.
+      x_i = (x_i - mui_i ) / S_i
+      where
+      S_i would be standard deviation
+        or we could use (max(x_i) - min(x_i))
+      would bring x_i to approximately (-0.5, 0.5) 
+
+  v. Learning Rate
+    try alpha at 3x interval
+      ..., 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, ...
+    plot J(theta) along iteration for different alpha.
+
+------------------------------------------------------------------------
+  vi. Features and Polynomial Regression
+    1. combining features
+    2. polynomial regression
+      * really requires feature scaling (normalization)
+
+========================================================================
+2. Computing Parameters Analytically
+
+------------------------------------------------------------------------
+  i. Normal Equation
+    Formula used that gives you 
+      theta that minimizes cost function min J(theta)
+      feature scaling is not important
+
+      { theta = (Transpose(X) * X)^(-1) * Transpose(X) * y }
+
+    where as,
+      design matrix X = |transpose(x(1))|
+                        |transpose(x(2))|
+                               .
+                               .
+                               .
+                        |transpose(x(n))|
+
+      note here x(i) = | x(i)_0 |
+                       | x(i)_1 |
+                       |    .   | 
+                       |    .   |
+                       |    .   |
+                       | x(i)_j |
+ 
+  ii. Compare to GD
+    GD: pros:
+        Need to choose alpha;
+        Need many iterations;
+        cons:
+        Works well even when n is large; o(kn^2)
+          no need to compute (X^T *X)^-1
+          Computing inverse Matrix is kinda O(n^3);
+        
+  iii. Noninvertible (Transpose(X) * X)
+    Causes:
+    a. Redundant features
+    b. Too many features (e.g. m << n).
+      -> delete features, or use regularization
+    Use psudo-inverse
+
+
+
