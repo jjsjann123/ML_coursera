@@ -1,0 +1,27 @@
+========================================================================
+--Classification--------------------------------------------------------
+  y = 0 or 1
+  regression will not work
+  
+  Logistic Regression: 0 <= h_theta(x) <= 1
+  * this is a classification algorithm although it is called regression
+  
+--Logistic Regression---------------------------------------------------
+i. Model
+  h_theta(x) = g(transpose(theta)*x);
+  whereas,
+	g(z) = 1/(1+e^(-z)); # Sigmoid function / Logistic function
+
+  interpretation:
+	h_theta(x) = estimated probability that y=1 on input x
+	           = p(y=1|x;theta)
+
+ii. Decision Boundary
+  predict "y=1", if h_theta(x) >= 0.5
+          "y=0", otherwise
+  h_theta(x) >= 0 --> transpose(theta)*x >= 0;
+  h_theta(x) < 0 --> transpose(theta)*x < 0;
+
+  transpose(theta)*x >= 0
+	this is a boundary on space R(x)
+	this is not necesarrily a linear boundary

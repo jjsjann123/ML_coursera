@@ -1,0 +1,67 @@
+Standard example of machine learning
+----------neural network architecture-----------------------------------
+i. Feed-forward neural network
+  input units -> hidden units -> output units
+  
+ii. Recurrent network
+  directed cycles in their connection graph
+  
+  * difficult in training
+  * biologically realistic
+  * natural way to model sequential data:
+	-> equivalent to very deep nets with one hidden layer per time slice
+	   except they use the same weights at every time slice
+	          they get input at every time slice
+    -> remember information in their hidden state for a long time
+
+iii. Symmetrically connected networks
+  like recurrent networks but the connection between units are 
+symmetrical (same weight in both directions)
+  * easier to analysis
+  
+========================================================================  
+----------Perceptrons---------------------------------------------------
+i. standard architecture  
+  input units --> feature units -(learned weights)-> decision unit
+
+ii. Binary threshold neurons
+  
+  Perceptrons convergence procedure:
+    * Training binary output neurons as classifiers
+    * Guarantee to find a set of weights that gets the right answer for
+      all the training cases if any such set exists
+
+----------Geometrical view of perceptrons-------------------------------
+i. Weight-space
+  * One dimension per weight
+  * A point in the space represents a setting of all the weights
+  * Each training case is a hyperplane through the origin (Assuming we 
+    eliminate the threshold), The weights must lie on one side of it.
+
+ii. Convex-problem?
+  * the average of 2 good weight will give us another good weight
+
+iii. Why learning works? (proof)
+  * squared-distance
+  * "generously feasible" region
+
+----------Limitations of perceptrons------------------------------------
+i. Features
+  * With enough "right" features, we can do anything
+  However:
+  e.g.
+	Binary threshold output unit
+	Cannot tell if two single bit features are the same
+  e.g.
+    Discriminating simple patterns under translation with wrap-around
+
+ii. Feature detectors is the tricky part. And can only be handled by 
+    hand.
+
+iii. Learning with hidden units
+  1. Networks without hidden units are very limited in the input-output
+     mappings they can learn to model.
+  * More layers of linear units do not help. It is still linear
+  * Fixed output non-linearities are not enough
+  
+
