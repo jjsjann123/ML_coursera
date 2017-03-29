@@ -1,4 +1,4 @@
-========================================================================
+==Classification and Regression=========================================
 --Classification--------------------------------------------------------
   y = 0 or 1
   regression will not work
@@ -13,6 +13,7 @@ i. Model
 	g(z) = 1/(1+e^(-z)); # Sigmoid function / Logistic function
 
   interpretation:
+  0 <= h_theta(x) <= 1
 	h_theta(x) = estimated probability that y=1 on input x
 	           = p(y=1|x;theta)
 
@@ -25,3 +26,41 @@ ii. Decision Boundary
   transpose(theta)*x >= 0
 	this is a boundary on space R(x)
 	this is not necesarrily a linear boundary
+
+iii. Cost Function (for logistic regression)
+  J(theta) = 1/m * sum_i( cost(h_theta(x(i)), y(i) )
+
+  * the cost function for linear regression does not work here.
+    we want a convex J(theta) -> so we could use Gradient Descend
+  cost(h_theta(x), y) = -log(h_theta(x))      , if y=1
+                        -log(1 - h_theta(x))  , if y=0
+    * h_theta(x) is between [0,1]
+    * for correct prediction h_theta(x) = y -> cost(h_theta(x), y) = 0;
+
+iv. Simplified Cost function and Gradient Descent
+  * remove the condition 
+  cost(h_theta(x), y) = -ylog(h_theta(x)) - (1-y)log(1-h_theta(x))
+
+  min_theta J(theta)
+    Gradient Descent
+    * algorithm looks identical to linear regression!
+    * only difference is h_theta(x)
+    * feature scaling still holds
+
+--Advanced Optimization-------------------------------------------------
+Given theta, we need to compute
+  i. J(theta)
+  ii. patial_derivative( J(theta) )
+to find minimum J(theta)
+
+Optimization algorithms: (aside from Gradient descent)
+  * Conjugate gradient
+  * BFGS
+  * L-BFGS
+  Advantage:
+    1. No need to manually pick alpha
+    2. Often faster than gradient descent
+  Disadvantages -> more complex
+
+  --> libraries usually provide such solver to do it for you.
+
