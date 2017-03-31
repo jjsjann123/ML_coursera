@@ -1,0 +1,100 @@
+i. why the perceptron learning cannot be generalised to hidden layers
+  every time the weights change and get closer to every "generously
+  feasible" set of weights
+	this cannot be extended to more complex networks
+
+----------Linear neuron-------------------------------------------------
+i. Linear neuron
+  instead of getting weights closer to a good set of weights,
+  -> we move actual output values closer to the target values.
+
+    y = sum_i(w_i * x_i) = transpose(w) * x
+	
+	square root error for y;
+
+  * Why not solve it analytically?
+	1. we want a method that can be generalised to multi-layer, 
+	non-linear neural networks
+	
+ii. delta rule (GD?)
+  Error function
+    -> derivative
+  online algorithm : looking at one example at a time.
+	-> vs batch learning from Perceptron learning
+  delta-rule = sum_n(x(n)_i * (t(n)-y(n)))
+
+iii. error surface in extended weight space
+  extended weight space
+    * one added dimension for error function
+  skewered scale -> feature scaling
+
+----------Logistic neuron-----------------------------------------------
+i. Logistic neurons
+  z = b + sum_i(x_i * w_i)
+  y = 1 / (1+e^(-z))
+  
+ii. Derivatives
+  dy/dz = y*(1-y)
+  
+  dy/dw_i = dz/dw_i * dy/dz
+          = sum_n (x[n]_i * y[n](1-y[n]) * (t[n]-y[n]))
+		  = sum_n ([slope of logistic] * delta-rule)
+
+----------Backpropogation algorithm-------------------------------------
+i. Learning with hidden units
+  * automate the loop of designing features for a particular task
+
+  1. Learning by perturbing weights
+	a. randomly perturb one weight at a time.
+    * very inefficient
+	* towards the ending, large weight perturbation would make it worse
+
+	b. randomly perturb all weights in parallel
+	
+	c. randomly perturb the activities of the hidden units
+
+  2. Idea behind backpropagation
+    a. we do NOT know what the hidden units ought to do
+	b. we CAN compute how fast the error changes as we change a hidden
+	   activity
+	* Instead of using desired activities to train the hidden units,
+	  -> Use error derivatives w.r.t. hidden activities
+	* We can compute error derivatives for all hidden units
+	  simultaneously
+
+ii. sketch of backpropagation
+  calculate
+    dE/dw
+  for a single training case
+  * Highly efficient and can be done in parallel
+  1. convert the discrepancy between each output and its target value
+     into an error derivative
+  2. compute error derivatives in each hidden layer from error
+     derivatives in the layer above
+  3. use error derivatives w.r.t. activities to get error derivatives
+     w.r.t. the incoming weights
+
+iii. Using derivatives computed by the backpropagation algorithm
+  1. optimization
+    * how to use dE/dw to discover a good set of weights
+	a.how often to update the weights
+	  * Online 
+	  * Full batch
+	  * Mini-batch
+	b.how much to update
+  2. generalization
+    * how to ensure the learned weights work well for cases we have not
+	  seen
+    a.overfitting
+	  * sampling error
+	    Fitting model cannot tell whether a regularity is:
+		  real
+		  or caused by sampling error
+	solution:
+	  * weight-decay
+	  * weight-sharing
+	  * early stopping
+	  * model averaging
+	  * Bayesian fitting of neural nets
+	  * dropout
+	  * generative pre-training
