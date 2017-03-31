@@ -64,3 +64,66 @@ Optimization algorithms: (aside from Gradient descent)
 
   --> libraries usually provide such solver to do it for you.
 
+--Multiclass Classification---------------------------------------------
+i. One-vs-all (one-vs-rest):
+  fit n classifier (one for each class)
+    h[i]_theta(x) = P(y=i | x;theta), for i=1,2,...,n
+  on a new input
+    pick class i that
+      max[i] h[i]_theta(x)
+
+==Overfitting===========================================================
+i. Underfit ("high bias")
+ii. Overfit ("high variance")
+  * too many features
+  * the learned hypothesis fit training set very well but fail to
+    generalize to new examples
+
+--Addressing overfitting------------------------------------------------
+i. Reduce number of features
+  * manually select which features to keep
+  * model selection algorithm
+ii. Regularization
+  * keep all the features, but reduce magnitude/values of parameters
+    theta_j
+  * works well when we have a lot of features, each of which contributes
+    a bit to predicting y
+
+--Cost function---------------------------------------------------------
+i. Intuition:
+  Penalize extra theta_j by adding them into cost function.
+
+ii. Regularization
+  Small values for parameters theta
+    -> "simpler" hypothesis (smoother)
+    -> less prone to overfitting
+
+  modify cost function to penalize each theta
+  J(theta)=1/2m*(sum_i((h_theta(x[i])-y[i])^2)+ lambda*sum_i(theta_i^2))
+  where as,
+    lambda - regularization parameter
+
+--Regularized Linear Regression-----------------------------------------
+i. Gradient descent
+  theta_0 := theta_0 - alpha / m * sum_i((h_theta(x[i])-y[i])*x[i]_0)
+  theta_j := theta_j - alpha / m * sum_i((h_theta(x[i])-y[i])*x[i]_j)
+             + (1-alpha*lambda/m) * theta_j
+
+ii. Normal equation
+  theta = (transpose(X)*X + lambda*[0 and 1 on diagonal]).inverse *
+           transpose(X)*y
+  Non-invertibility
+    using regularization would makesure the matrix in the parenthesis is
+    for sure invertible.
+
+--Regularized Logistic Regression---------------------------------------
+i. Gradient descent
+  theta_0 := theta_0 - alpha / m * sum_i((h_theta(x[i])-y[i])*x[i]_0)
+  theta_j := theta_j - alpha / m * sum_i((h_theta(x[i])-y[i])*x[i]_j)
+             + (1-alpha*lambda/m) * theta_j
+  * notice this is not the same as Linear Regression. Because we have
+    different h_theta(x)
+
+ii. Advanced optimization
+  * Only applies to Octave
+  * We only need to update the cost function to theta.

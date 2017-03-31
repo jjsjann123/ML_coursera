@@ -1,0 +1,63 @@
+==Nueral Network========================================================
+--Motivation------------------------------------------------------------
+i. Non-linear Hypotheses
+  * high order terms for our regression becomes expensive for
+    high-dimensional input, as well as overfitting
+  e.g. image recognition
+    50x50 pixel images -> n=2500 (7500 if RGB)
+    if we include all quadratic features (x_i*x_j) ->3 million features
+
+ii. Neurons and the Brain
+  * widely used in 80s & 90s, popularity diminished in late 90s.
+  * recently became state of art approach.
+  
+  # The "one learning algorithm" hypothesis
+    neural re-wiring experiments
+      Auditory cortex learns to see.
+
+--Neural Networks Model Representation----------------------------------
+i. Neuron model
+  Dendrite - input wires
+  Nucleus  - 
+  Axon     - output wire
+
+ii. Neuron model: Logistic unit
+    x1 \
+    x2 --> h_theta(x)
+    x3 /
+  Sigmoid (logistic) activation function: g(z) = 1/(1+e^(-z))
+  h_theta(x) = 1/(1+e^(- transpose(theta)*x))
+  where as,
+    theta - weight / hypothesis
+
+  Neural network:
+    input layer -> hidden layer(s) -> output layer
+
+  a[j]_i    -> "activation" of unit i in layer j
+  theta[j]  -> matrix of weights controlling function mapping from layer
+               j to layer j+1
+               * if network has s_j units in layer j,
+                                s_[j+1] units in layer j+1,
+                 theta[j] has dimension s_[j+1] x (s_j + 1)
+                 # the s_j + 1 is due to bias.
+
+iii. Forward propagation: Vectorized implementation
+  z[j] = theta[j-1]*a[j-1]  -> input from previous layer (j)
+  a[j] = g(z[j])            -> output for current layer
+
+  1. the process start from layer 0 (input x)
+  2. forwar propagate the input from layer to layer
+    * each layer looks just like logistic regression
+    * each layer is using a set of new feature a[i]
+        -> the network picks its own feature through adjusting weights
+           between hidden layers
+
+iv. applications
+  i. bit operation
+    single layer -> AND / OR / (NOT x1) AND (NOT x2)
+    3 layer -> through combining model from single layer
+            -> XNOR
+    
+v. Multiclass Classification
+  * extension of one-vs-all method
+  * multiple output nodes
