@@ -1,0 +1,70 @@
+--Unrolling Parameters--------------------------------------------------
+Problem:
+  Neural Network uses multiple matrix as parameters
+  We need to "unroll" into vectors so we can use Octave fminunc
+  Later we use reshape to pull it back to matrix
+
+  * matrix representation
+    convenient for FP/BP computation
+    easier to utilize vetorize computation
+
+  * vector representation
+    in order to utilize advanced optimization algorithm
+
+--Gradient Checking-----------------------------------------------------
+* Used to check subtle bugs for complex models
+
+i. Numerical estimation of gradients
+  computing gradient vs approximation
+  (d/d_Theta)J(Theta) = (J(Theta+epsilon)-J(Theta-epsilon))/2*epsilon
+
+  * wo check that
+    gradApproximation should be close to DerivativeVector
+
+  * before real training for neural network, TURN OFF gradient checking
+    -> simply because it is expensive to perform gradient checking.
+
+--Random Initialization-------------------------------------------------
+* Initialize all Theta[l]_ij = 0 for all i,j,l
+  does not work, because all nodes will be symmetric
+    -> all hidden units in a layer are computing the same feature
+    -> the model won't work
+
+i. Randonm initialization: Symmetry breaking
+  Initialize each Theta[l]_ij to a random value in [-epsilon, epsilon]
+
+--Putting it together---------------------------------------------------
+i. Pick a network architecture
+  * connectivity pattern between neurons
+    # of input units            -> Dimension of features x[i]
+    # of output units           -> # of classes
+    # of neurons in each layer & # of layers
+
+ii. Training a neural network
+  1. Randomly initialize weights
+  2. Implement forward propagation to get h_Theta(x[i]) for any x[i]
+  3. Implement code to compute cost function J(Theta)
+  4. Implement backpropagation to compute partial derivatives
+         (d/d Theta[l]_ij) J(Theta)
+  5. Use gradient check to make sure gradient is correct
+     Disable gradient check for learning
+  6. Use gradient descent or advanced optimization method with BP to
+     minimize J(Theta) as a function of parameters Theta
+
+  * hint, you could use a for loop in each iteration
+    (do it at first time)
+    but not really, -> matrix version would also work
+
+  e.g.
+  for i = 1:m { // (x[1], y[1]), (x[2], y[2]) ... (x[m], y[m]) 
+
+    Perform FP and BP using (x[i], y[i])
+    //  Get activations a[l] and delta terms delta[l] for l = 2,...,L
+
+    Delta[l] := Delta[l] + delta[l+1]*transpose(a[l])
+    ...
+  }
+  ...
+  // This J needs to take into consideration of regularizations e.t.c.
+  compute partial derivative (d/d Theta[l]_ij)J(Theta)
+
