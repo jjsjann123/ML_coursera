@@ -3,6 +3,7 @@ import math
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from scipy import optimize
+import scipy.io
 
 def loaddata(file):
     return np.loadtxt(file, delimiter=',')
@@ -47,18 +48,18 @@ def sigmoid(x):
         ret = 0.0
     return ret
 
-def computeHV(X, Y, theta):
+def computeHV(X, theta):
     sg = np.vectorize(sigmoid)
     return sg(X.dot(theta))
 
 def computeJV(X, Y, theta):
     m = Y.size
-    h_theta = computeHV(X, Y, theta)
+    h_theta = computeHV(X, theta)
     return ( -np.log(h_theta.T).dot(Y) - np.log(1-h_theta.T).dot(1-Y))/m
 
 def computeGV(X, Y, theta):
     m = Y.size
-    h_theta = computeHV(X, Y, theta)
+    h_theta = computeHV(X, theta)
     return X.T.dot(h_theta-Y)/m
 
 def draw(data):
@@ -67,14 +68,14 @@ def draw(data):
 
 def computeJRV(X, Y, theta, l):
     m = Y.size
-    h_theta = computeHV(X, Y, theta)
+    h_theta = computeHV(X, theta)
     l_theta = np.copy(theta)
     l_theta[0] = 0;
     return (l/2.0*sum(l_theta**2) - np.log(h_theta.T).dot(Y) - np.log(1-h_theta.T).dot(1-Y))/m
 
 def computeGRV(X, Y, theta, l):
     m = Y.size
-    h_theta = computeHV(X, Y, theta)
+    h_theta = computeHV(X, theta)
     l_theta = np.copy(theta)
     l_theta[0] = 0;
     return (X.T.dot(h_theta-Y)+l*l_theta)/m
@@ -90,3 +91,19 @@ def expandArray(X, order):
         for iter in np.arange(0, cur+1):
             X = np.append(X, (X[1]**iter)*(X[2]**(cur-iter)))
     return X
+
+def forwardPropagation(X, theta):
+    sg = np.vectorize(sigmoid)
+    X0 = np.array(X)
+    for i in range(0, len(theta)):
+        X0 = sg(X0.dot(theta[i].T[1:,:])+theta[i][:,0])
+    return X0
+
+def prediction(res, y):
+    res = np.argmax(res, axis=1)
+    res += 1;
+    plt.plot(range(0, 5000), res)
+    plt.plot(range(0, 5000), y)
+    plt.show()
+    hit = np.where(res==y[:,0], 1, 0)
+    return hit
