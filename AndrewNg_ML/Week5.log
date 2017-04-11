@@ -1,0 +1,9 @@
+==Nueral Network========================================================
+
+  L 	-> total no. of Layers in network
+  s_l 	-> no. of units( not counting bias) in layer l
+  K		-> output units  s_L = K
+  
+--Cost Function---------------------------------------------------------
+  similarly from Logistic Regression
+  
