@@ -1,0 +1,83 @@
+==Decision on problems==================================================
+
+--Example of housing prices---------------------------------------------
+i. large errors on predictions, what to do?
+  * Get more training examples
+  * Try smaller sets of features
+  * Try getting additional features
+  * Try adding polynomial features
+  * Tuning lambda
+-> Problems:
+  time consuming
+  might not work
+  
+--Machine learning diagnostic-------------------------------------------
+i. Diagnostic
+  A test that you can run to
+    * gain insight what is/isn't working with a learning algorithm 
+    * gain guidance as to how best to improve performance
+  * Can take time to implement (But still good) 
+
+--Evaluating a Hypothesis-----------------------------------------------
+i. split data into
+  * Training set
+  * Test set 
+  -> Random sampling + 70% training + 30% test
+
+  1. Minimize training error
+  2. Compute test set error
+    * square root;
+    * logistic;
+      -1/m*sum_i( y[i]log(h_theta(x[i])) + (1-y[i])log(h_theta(x[i])))
+    * misclassification error (0/1 misclassification error); 
+
+--Model Selection and Train/Validation/Test sets------------------------
+Model Selection
+  e.g. degree of polynomial 
+  d = 1 --> h_theta(x) = theta_0 + theta_1 * x
+  d = 2 --> h_theta(x) = theta_0 + theta_1 * x + theta_2 * x^2
+  d = 3 --> h_theta(x) = theta_0 + theta_1 * x + ... + theta_3 * x^3
+  We denote them as Theta[1], Theta[2], Theta[3], ...
+
+  -> To evaluate how well the model generalize?
+    Report test set error J(Theta[i])
+    This is not fair anymore, (optimized generalization)
+    Because we choose our model per test set error (tuning according to
+    test cases)
+
+Training/Validation/Test
+  Approach:
+  * Training set         60%  -> Trainig error
+  * Cross Validation set 20%  -> Cross Validation error
+  * Test set             20%  -> Test error
+
+  1. use cross validation set to choose model
+  2. estimate generalization error for test set
+
+--Diagnosing Bias vs Variance-------------------------------------------
+* High bias problem / underfitting
+  J_train(theta)   high
+  J_cv(theta)      high
+
+* High variance problem / overfitting
+  J_train(theta)   low
+  J_cv(theta)      high
+
+--Regularization and Bias/Variance--------------------------------------
+i. new definition
+  J(Theta)          with lambda (Regularization)
+  J_train(Theta)
+  J_cv(Theta)
+  J_test(Theta)
+
+ii. multiple model with different lambda value  
+  similarly min J(theta)-> choose J_cv(theta)-> generalize J_test(theta)
+
+* High bias problem / underfitting ( large lambda )
+  J_train(theta)   low
+  J_cv(theta)      high
+
+* High variance problem / overfitting ( small lambda )
+  J_train(theta)   high
+  J_cv(theta)      high
+
