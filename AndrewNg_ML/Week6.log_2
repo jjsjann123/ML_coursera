@@ -1,0 +1,62 @@
+--Handling Skewed Data--------------------------------------------------
+...continued
+i. Error metrics for skewed classes
+e.g. Cancer classification example
+  y = 1,  if cancer
+  y = 0,  otherwise
+    if ratio between y=1 to y=0 is huge (or very small) -> skewed data
+
+  accuracy rate does not legitimately validate the model
+
+Solutions:
+* Precision/Recall
+  y = 1 in presence of rare class that we want to detect
+                            Actual class
+                        1                     0
+  Predicted    1    True positive   |   False positive
+    class      0   False negative   |    True negative
+  
+      * Precision = True_positives / (Predicted_Positives)
+                  = True_positives / (True_positives + False_positives)
+
+      * Recall    = True_positives / (Actual_Positives)
+                  = True_positives / (True_positives + False_negatives)
+
+  We usually define y=1 as rare cases
+
+  * Trading off Precision/Recall
+    i. adjust threshold for h_theta(x) (if default 0.5)
+      since h_theta(x) is between [0, 1)
+      a. if we increase threshold for h_theta(x) (say to 0.7)
+          -> Higher precision
+            Lower recall
+      b. if we decrease threshold for h_theta(x) (say to 0.3)
+          -> Lower precision
+            Higher recall
+
+  More general: Predict y = 1, if h_theta(x) >= threshold
+
+  Problem here: how to compare precision/recall?
+    * 2 number is hard to compare
+    * average does not work 
+    -> F1 score
+
+* F1 Score
+  F1 score = 2 * (PR) / (P + R)
+    where,  P - Precision
+            R - Recall
+    requires a balanced R, P to have high F1 score
+  
+--Data for Machine Learning---------------------------------------------
+* Large data rationale
+  ? Would a human expert be able to predict the output with given
+    information
+
+  1. Low bias algorithm (manay parameters, NN with many hidden units)
+    -> J_train(theta) will be small 
+
+  2. Use very large training set (unlikely to overfit)
+    -> J_train(theta) close to J_test(theta)
+
+  combining 1 & 2
+    -> J_test(theta) will be small
