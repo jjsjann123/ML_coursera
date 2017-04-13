@@ -81,3 +81,30 @@ ii. multiple model with different lambda value
   J_train(theta)   high
   J_cv(theta)      high
 
+
+==Prioritize system design==============================================
+e.g. Spam Detection
+  Supervised learning.
+    x = features of email
+	y = spam(1) or not spam(0)
+
+  ? what to do?
+   * collect lots of data ("honeypot" project)
+   * develop sophisticated features
+   * algorithm to process input
+   
+--Error analysis--------------------------------------------------------
+1. Pipeline should be:
+  i. start with quick/simple algorithm ( <1 day development)
+  ii. plot learning curve to decide what could be improvements
+  iii. error analysis:
+     Manually examine the examples of errors
+	 -> Look for systematic trend
+	* what type of email it is
+	* what cues (features) would help with correct classification
+
+2. Numerical evaluation
+  * cross-validation
+  use it to check the performance with/without certain approach
+  
+
