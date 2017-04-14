@@ -1,109 +1,40 @@
-==========Learning to predict the next word=============================
-i. how to?
-  Relation information into features
+==========Object recognition============================================
 
-----------Family tree relationship--------------------------------------
-* A relational learning task
-  Given a large set of triples that come from some family trees, figure
-out the regularities
-        (x has-mother y)
-      + (y has-husband z)
-      = (x has-father z)
+----------Why object recognition is difficult---------------------------
+Problems:
+  * segmentation
+    static image does not come with motion cue
+  * lighting
+    intensities of pixels
+  * deformation
+    hand-written characters
+  * affordances
+    chairs come with different shape serving the distinct purpose
+  * viewpoint
+    information hops between input dimensions
 
-  * search through a very large discrete space of possibilities
-  * ? Can a neural network capture it by searching through a continuous
-    space of weights?
+----------Ways to achieve viewporint invariance-------------------------
+Approaches:
+  i. redundant invariant features
+  ii. put a box around the object and use normal pixels
+      -> Judicious normalization
+  iii. use replicated featues with pooling
+       -> Convolutional neural nets
+  iv. use hierarchy of parts that have explicit poses relative to camera
 
-  (A R B) -> we could do both prediction & validation
+i. Invariant feature approach
+  
+ii. Judicious normalization
+    pros:
+      provide invariance to many degrees of freedom:
+        translation, rotation, scale, shear, stretch
+    cons:
+      choosing the box is difficult
+    * chicken & egg problem
+      we need to recognize the shape to get the box right
+  alternative:
+    training with well-segmented, upright images to fit the correct box
+    test time try all possible boxes in a range of positions and scales
 
-----------A brief diversion into cognitive science----------------------
-i. long devate between 2 theory
-  * Feature theory: A concept is a set of semantic features
-  * Structuralist theory: A concept lies in its relationships of other
-    concepts
+----Convolutional neural networks for hand-written digit recognition----
 
-  -> The two theories need not be rivals.
-  * A neural net can use vectors of semantic features to implement a
-    relational graph
-  * right way to implement relational knowledge in a neural net is still
-    an open issue
-    
-----------Another diversion: The softmax output function----------------
-* squared error measure has drawbacks:
-  1. Desired output is 1 and actual output is 0.00000001
-     no gradient for a logistic unit to fix up the error
-
-  2. Possibilities for exclusive lables should sum to 1
-     We are depriving the network of this knowledge
-
-  Solution: force the output to represent a probability distribution
-            across discrete alternatives
-
-i. Softmax
-  The output units y_i = exp(z_i) / sum_j(exp(z_j))
-    d(y_i)/d(z_i) = y_i * (1-y_i)
-  Pros:
-    1. output lies between [0, 1)
-    2. sum of output = 1
-
-ii. Cross-entropy
-  The right cost function to use with softmax
-      C = - sum_j( t_j * log(y_j) )
-      d(C)/d(z_i) = sum_j ( d(C)/d(y_j)*d(y_j)/d(z_i) ) = y_i-t_i
-  Pros:
-    1. big gradient when target value is far away from output value
-    2. the steepness of d(C)/d(y) exactly balances the flatness of dy/dz
-   
-----------Neuro-probabilistic language models---------------------------
-e.g. Basic problem
-  * acoustic input is often ambiguous
-    -> can not identify phonemes perfectly in noisy speech
-  * speech recognizers have to know which words are likely to come next
-    and which are not
-
-i. "Trigram" method
-  * take a huge amount of text and count the frequencies of all triples
-    of words
-  * used to be state-of-the-art
-  p (w3 = c | w2 = b, w1 = a)     count(abc)
-  ---------------------------  =
-  p (w3 = d | w2 = b, w1 = a)     count(abd)
-
-  -> can not use much bigger context
-    too many possibilities & most counts will be zero
-  -> we have to "back-off" to digrams when count is too small
-    probability is not zero just because count is zero
-
-  fails to use:
-    similarities between words
-      -> we should use feature representation
-         use the semantic and syntactic features of each words
-
-ii. Bengio's neural net for predicting the next word
-  * problem
-    large number of outputs
-    -> cannot afford to have many hidden units
-       unless we have a huge number of training cases
-    -> hard to get all probabilities right
-       small probabilities are often relevant
-
-iii. Ways to deal with the large number of possible outputs
-  1. A serial architecture
-    Use candidate as another input
-    * derivatives try to raise the score of the correct candidate and
-      lower the scores of its high-scoring rivals
-    * we could only use a small set of candidates (suggested by other
-      predictors), to revise the probabilities
-  2. Learning to predict the next word by predicting a path through tree
-    Structure the  words in a binary tree with words as the leaves
-    * A convenient decomposition
-      During learning, we only consider nodes on the correct path
-        -> Log(N) instead of N
-      Unfortunately it is still slow at test time
-  3. A simpler way to learn feature vectors for words
-    * A window of 11 words (5 past + 5 future)
-      Learn to judge if a word fits the 5 word context on either side of
-      it
-    * use 2-d map to display the quality of learned feature vectors
-      where very similar vectors are put close to each other
-      similar clusters are also put close to each other ("t-sne")
