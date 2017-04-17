@@ -38,3 +38,81 @@ ii. Judicious normalization
 
 ----Convolutional neural networks for hand-written digit recognition----
 
+* use many different copies of same feature detector with different
+  positions
+  1. could also replicate across scale and orientation ( tricky and
+     expensive)
+  2. replicatoin greatly reduces the number of free parameters
+* use several different feature types, each with its own map of
+  replicated detectors
+  1. allow each patch of image to be represented in several ways
+
+Backpropagation with weight constraints
+  * easy to modify the BP algorithm to incorporate linear constraints
+    between the weights
+  * constrain w1 and w2 -> make delta_w1 = delta_w2
+
+What does replicating the feature detectors achieve
+  * Equivariant activities
+    replicated features do NOT make the neural activities invariant to
+    translation.
+  * Invariant knowledge
+
+Pooling the outputs of replicated feature detectors
+  * average pool / max pool
+  * problem: we lost precise information on the details
+
+Le Net
+* by Yann LeCun
+  - many hidden layers
+  - may maps of replicated units in each layer
+  - pooling
+  - A wide net that can cope with several characters at once even if
+    they overlap
+  - a clever way of training a complete system, not just a recognizer
+e.g.
+                  32x32 input 
+              ->  C1: feature maps 6@28x28
+ subsampling  ->  S2: f maps 6@14x14  
+ convolutions ->  C3: f maps 16@10x10
+ subsampling  ->  S4: f maps 16@5x5
+ full conn    ->  C5: layer 120
+ full conn    ->  F6: layer 84
+ full conn    ->  OUTPUT 10
+
+Priors and Prejudice:
+* We can put our prior knowledge about the task into the network by
+  designing appropriate:
+  i. connectivity
+  ii. weight constraints
+  iii. neuron activation functions
+* this is less intrusive than hand-designing the features
+* use prior knowledge to create a whole lot more training data 
+* allows optimization to discover clever way that we have not intended
+
+How to detect a significant drop in the error rate
+* 2 models with 30 errors and 40 errors, which one is better?
+  look at the ratio of 
+  model1 got right and model2 got wrong
+  to model1 got wrong and model2 got right.
+  this will tell us the improvement.
+
+----Convolutional neural networks for object recognition----------------
+ILSVRC-2012 competition on ImageNet
+  * classification task
+  * localization task
+
+Computer vision system use complicated multi-stage systems
+  early stages are typically hand-tunes by optimizing a few parameters
+
+A neural network for Imagenet
+  Activation functions:
+  * Rectified linear units
+  * Competitive normalization
+
+  "dropout" -> regularize the weights in the globally connected layers
+            -> reduce overfitting
+
+  hardware -> GPU
+
+
