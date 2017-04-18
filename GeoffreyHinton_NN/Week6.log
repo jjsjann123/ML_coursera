@@ -1,0 +1,169 @@
+==========Neural Networks for Machine Learning==========================
+
+----------Overview of mini-batch gradient descent-----------------------
+i. error surface
+locally a piece of a quadratic bowl is usually a very good approximation
+Problems:
+1. gradient might not be the direction to go
+2. learning rate might cause oscillation diverging
+-> We want to:
+  1. move quickly in directions with small but consistent gradients
+  2. move slowly in directions with big but inconsistent gradients
+
+Stochastic gradient descent
+  * highly redundant dataset would cause lots of gradient computation to
+    have no impact on the final gradient
+   
+  use only half for each gradient step
+                  |
+  use one case at a time ("online")
+
+  something in between -> Mini-batch
+  pros:
+    * less computation is used
+    * computing many cases simultaneously using matrix-matrix(efficient)
+  cons:
+    * mini-batches need to be balnced for classes
+
+Two types of learning algorithm
+  1. full gradient computed from all training cases
+    pros:
+    many optimization smooth non-linear functions been studied for years
+    cons:
+    multilayer NN are not typical of the problems, so adaptation are
+    needed
+  2. mini-batch learning
+    work best with large NN with very large and highly redundant
+    training sets
+    
+Basic mini-batch gradient descent algorithm
+  * Guess an initial learning rate.
+    - if error keeps getting worse or oscillates wildly, reduce it
+    - if error falls consistently but slowly, increase it
+
+----------A bag of tricks for mini-batch gradient descent---------------
+* Initializing the weights
+  - if two hidden units have exactly the same bias and incoming and
+    outgoing weights, they will always get the same gradient and won't
+    be able to learn different features
+  * small random weights
+  * initialize the weight proportional to sqrt(fan-in)
+  * scale learning rates the same way
+
+* Shifting the inputs
+  shifting each component of the input vector so that it has zero mean
+  over the training set
+* Scaling the inputs
+  transform each component of the input vector so that it has unit
+  variance over the whole training set
+
+* Decorrelate the input components
+  multiple ways:
+  *. Principal Components Analysis
+    - Drop the principal components with the smallest eigenvalues
+      achieves some dimensionality reduction
+    - Divide the remaining principal components by the square roots of
+      their eigenvalues
+      For a linear neuron, converts an axis aligned elliptical error
+      surface to a circular one, where gradient points towards minimum.
+
+* Common problems that occur in multilayer networks
+  start with big learning rate
+    - large weights -> small dirivatives for hidden units
+    - usually a plateau, but often mistaken as a local minimum
+  
+  classfication with squared error or cross-entropy error
+
+* be careful about turning down the learning rate
+
+* 4 ways to speed up mini-batch learning
+  1. Use "momentum"
+    - use gradient to change the velocity instead of position
+  2. Use separate adaptive learning rates for each parameter
+    - slowly adjust the rate using the consistency of the gradient for
+      that parameter
+  3. rmsprop:
+     Divide the learning rate of a weight by a running average of the
+     magnitudes of recent gradients for that weight
+  4. Take a fancy method from the optimization literature that makes use
+     of curvature information
+    - adapt it to NN
+    - adapt it to mini-batches
+
+----------The momentum methods------------------------------------------
+* works for both full-batch & mini-batch
+* combined with steepest gradient descend
+
+* builds up speed in directions + viscocity effect
+
+  v(t) = alpha * v(t-1) - epsilon * d(E(t))/d(w(t))
+    - gradient is to increment the previous velocity
+    - velocity decays by alpha ( < 1 )
+
+  delta_w(t) = v(t)
+    - weight change is equal to the current velocity
+
+* terminal velocity
+    v(infinity) is large for invariable gradient
+
+* At the begining of learning there may be very large gradients
+    - use small momentum (~0.5)
+    - later use big momentum (~0.9-0.99)
+
+* A better type of momentum (Nesterov 1983)
+  2012 Ilya Sutskever
+    - First make a big jump in the direction of the previous accumulated
+      gradient
+    - Then measure the gradient where you end up and make a correction
+
+----------A separate, adaptive learning rate for each connection--------
+* Intuition
+  - appropriate learning rates can vary widely between weights
+    * magnitude of gradients often very different for differetn layers
+    * fan-in of a unit determins the size of the "overshoot" effects
+      caused by changing many incoming weights to correct the same error
+  - use a global learning rate multiplied by an appropriate local gain
+    that is determined empirically for each weight
+
+Determine the individual learning rates
+* start with local gain of 1
+* increase the local gain if the gradient for that weight does not
+  change sign
+* use small additive increases and multiplicative decreases (mini-batch)
+  
+    delta_w[i][j] = -epsilon * g[i][j] * d(E)/d(w[i][j])
+
+    if d(E(t))/d(w[i][j](t) * d(E(t-1))/d(w[i][j](t-1) > 0
+      then g[i][j](t) = g[i][j](t-1) + 0.05
+      else g[i][j](t) = g[i][j](t-1) * 0.95
+
+Tricks to make it better 
+- limit the gains to lie in some reasonable range
+- use full batch learning or big mini-batches
+  * rule out the batch sample error causing sign change
+- combined with momentum (Jacobs, 1989)
+- adaptive learning rates only deal with axis-aligned effect
+  * not like momentum
+
+
+----------rmsprop: Divide the gradient by a running average of its------
+----------recent manitude-----------------------------------------------
+
+i. rprop: Using only the sign of the gradient
+  1. For full batch learning
+    combines the idea of:
+      * using the sign of the gradient
+      * adapting the step size separately for each weight
+    cons:
+      * for mini-batch, it violates the stochastic gradient descent,
+      * which is averaging gradients over successive mini-batches, e.g.
+      * nine batches with +0.1 and one batch with -0.9. This cannot be
+      * accomodated by rprop
+
+    combine:
+      - robustness of rprop
+      - effeciency of mini-batches
+      - effective averaging of gradients over mini-batches
+
+ii. rmsprop: A mini-batch version of rprop
+ 
