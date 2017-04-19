@@ -1,0 +1,140 @@
+==========Modeling sequences: A brief overview==========================
+* Getting targets when modeling sequences
+  - turn input sequence to output sequence (e.g. translation)
+  - get a teaching signal by trying to predict the next term in the
+    input sequence 
+
+* Predicting the next term blurs the supervised & unsupervised learning
+
+----------A brief overview----------------------------------------------
+
+1. Memoryless models for sequences
+  * Autoregressive models
+  * Feed-forward neural nets
+
+2. Beyond memoryless models
+  - store information in hidden state for long time
+  - noisy dynamics lead to noisy hidden state
+  - best we can do is to infer a probability distribution of hidden
+    state vectors
+
+  * Linear Dynamical Systems (engineers)
+    obj. tracking missiles / planets
+    - assuming Gaussian distribution
+    - "kalman filtering" used to calculate hidden state from observation
+
+  * Hidden Markov Models (computer scientists)
+    - assuming discrete distribution
+    - one-of-N hidden state
+    - Transitions between states are stochastic and controlled by
+      transition matrix
+    - output produced by a state is stochastic
+    |
+    * We cannot be sure of the state from a given output
+      So the state is "hidden"
+    * Easy representation across N states with N numbers
+    
+    - To predict output HMM have efficient algorithms for inference and
+      learning
+    Pros:
+      Good for speech recognition
+    Cons:
+      * Total N states can be selected at each time step
+        -> it can only remember log(N) bits about what it generated so
+           far
+        -> a single sentence ( 2 halves ) must fit in terms of info
+        -> easily goes beyond states
+    
+  * Recurrent neural networks
+    - Distributed hidden states allow storage of past info efficiently
+    - Non-linear dynamics allows update hidden state in complicated ways
+    i. not Stochastic?
+    ii. what can they do?
+      - oscillate
+      - settle to point attractors
+      - chaotically
+      - RNNs could potentially learn to implement lots of small programs
+        that each capture a nugget of knowledge and run in parallel,
+        interacting to produce very complicated effects.
+      CONS:
+      The computational power of RNN makes them very hard to train
+
+----------Training RNNS with backpropagation----------------------------
+* equivalence between feedforward nets and recurrent nets
+  - assuming the time delay of 1 in using each connection
+  - recurrent net is a layered feed-forward net reusing the same weights
+
+* Reminder: Backpropagation with weight constraints
+  - modify backpropagation algorithm to incorporate linear constraints
+    between the weights
+    - first compute gradients as usual
+    - then modify gradients to satisfy the constraints
+  e.g.
+    To constrain: w1 = w2
+    We need: delta_w1 = delta_w2
+    compute: d(E)/d(w1) and d(E)/d(w2)
+    use d(E)/d(w1)+d(E)/d(w2) for w1 and w2
+
+* Backpropagation through time
+  - RNN is a layered, feed-forward net with shared weights and then
+    train the feed-forward net with weight constraints
+  - Training algorithm in time domain:
+    * forward pass builds up a stack of the activities at each time step
+    * backward pass peels activities off the stack for error derivatives
+      at each time step
+    * after the backward pass we add together the derivatives at all the
+      different times for each weight
+
+  - An irritating extra issue
+    Initial activity state of all the hidden and output units
+    * treat initial state as learned parameters
+    * learn them in the same way as the weights
+      - start with random
+      - at the end of each training sequence, BP through time to get the
+        gradient of the error function with respect to each initial
+        state
+      - adjust initial states by following the negative gradient
+
+  - Providing input to recurrent networks
+    specify inputs in several ways:
+    specify targets in several ways:
+
+----------A toy example of training an RNN------------------------------
+e.g. binary addition problem
+  * feed-forward NN won't capture/generalize well on this one
+
+Recurrent net for binary addition
+  * 2 input units + 1 output units
+  * output is 2 time steps ago
+    - 1 time step to update hidden units
+    - another time step for hidden units to cause the output
+
+  * compare it to a finite state automaton
+    - state     vs      vector of activity
+    pros:
+      exponentially more powerfull
+       - 2^N possible binary vectors (only N^2 weights)
+
+----------Why is it difficult to train an RNN---------------------------
+* backward pass is linear (within each complete backpass)!
+  - leads to exploding or vanishing gradients
+  - feed-forward neural nets can cope with these(only few hidden layers)
+
+  so RNN has difficulty dealing with long-range dependencies
+
+* solutions:
+  1. Long short term memory
+  2. Hessian Free Optimization
+  3. Echo State Networks
+  4. Good initialization with momentum
+
+----------Long term short term memory-----------------------------------
+* memory cell (Hochreiter & Schmidhuber 1997)
+  - logistic and linear units with multiplicative interactions
+  - 'read', 'write', 'keep'
+  - self-link with a weight of 1
+  - logistics have nice derivatives
+
+* backpropagation through memory cell
+* e.g. Reading cursive handwriting
+

@@ -154,6 +154,8 @@ i. rprop: Using only the sign of the gradient
     combines the idea of:
       * using the sign of the gradient
       * adapting the step size separately for each weight
+        - increase/decrease the weight multiplicatively (e.g. times 1.2)
+        - limit step sizes to be within a range 
     cons:
       * for mini-batch, it violates the stochastic gradient descent,
       * which is averaging gradients over successive mini-batches, e.g.
@@ -166,4 +168,33 @@ i. rprop: Using only the sign of the gradient
       - effective averaging of gradients over mini-batches
 
 ii. rmsprop: A mini-batch version of rprop
- 
+  1. keeping a moving average of squared gradient for each weight
+    MeanSquare(w,t) = 0.9 MeanSquare(w,t-1) + 0.1*(d(E(t))/d(w(t)))^2
+  2. dividing the gradient by sqrt(MeanSquare(w,t)) make the learning
+     much better
+
+  * combining rmsprop with standard momentum
+  * combining with Nesterov momentum
+  * combining rmsprop with adaptive learning rates for each connection
+  * other methods related to rmsprop
+    - Yan LeCun "No more pesky learning rates"
+
+----------Summary of learning methods for NN----------------------------
+1. for small datasets or big datasets without much redundancy
+  - use a full-batch methods
+    * conjugate gradient / LBFGS
+  - adaptive learning rates / rprop
+
+2. big, redundant datasets use mini-batches
+  - gradient descent with momentum
+  - try rmsprop 
+  - try LeCun's latest recipe
+
+* why there is no simple recipe:
+  - NN differs a lot:
+    * very deep nets (especially ones with narrow bottlenecks)
+    * recurrent nets
+    * wide shallow nets 
+  - Tasks differ a lot:
+    * some require accurate weights, some don't
+    * some have many very rare cases (e.g. words)
