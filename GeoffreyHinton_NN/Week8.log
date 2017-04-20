@@ -1,0 +1,79 @@
+==========Modeling sequences: A brief overview==========================
+
+----------A brief overview of "Hessian-Free" optimization---------------
+skipped?
+
+----------Modeling character strings with multiplicative connections----
+* Advantages of working with characters
+
+i. An obvious recurrent neural net
+  - 1500 hidden units;
+  - 1-of-86 character;
+  - predict distribution for next character; (softmax)
+
+  - tree vs RNN
+    * prefix tree?
+    exponentially many nodes of all character strings of length N
+    * RNN
+    each state vector is a node
+    * shared structure between each node
+    * conjunction of current character and hidden information
+
+  - multiplicative connections (using factor to implement)
+    * current input to choose the hidden-to-hidden weight matrix
+      -> 86x1500x1500 parameters
+      -> could overfit
+    * we want different transition matrix for each character
+      -> we also want each matrices to share parameters
+    * factors
+        c_f = (b.T * w_f) * (a.T * u_f) * v_f
+                 scalar        scalar    vector
+      where as,
+        a, b - hidden state and input characters
+      # of parameters = 1500 (from u_f) + 1500 (v_f) + 86(w_f) = 3086
+
+        c_f = (b.T * w_f) * (u_f * v_f.T) * a
+                scalar      outer product
+              coefficient   transition
+                            matrix with 
+                            rank 1
+
+        c = sum_f((b.T*w_f)*(u_f*v_f.T)) * a
+      only one character is active at a time
+        gain w_kf multipli rank one matrix u_f*v_f.T
+        
+----------Learning to predict the next character using HF---------------
+Ilya Sutskever
+  5 million strings of 100 characters taken from wikipedia.
+  each string starts predicting at the 11th character
+
+* generate character strings
+* completions
+
+RNN
+  - requires less training data to reach same level of performance
+  - improves faster as the dataset gets bigger
+
+----------Echo state networks-------------------------------------------
+* we could use echo state initialization approach to initialize NN, then
+  use backpropagation to train NN.
+
+* key idea of echo state networks
+  - fix input->hidden and hidden->hidden connections
+  - learn hidden->output
+  ( expand input dimension -> linear training )
+
+  carefully choose hidden->hidden weights
+    * we have long echo for input
+    * sparse connectivity (loosely coupled oscillators)
+    * scale of input->hidden won't wipe out past information
+
+* beyond Echo State Networks
+  Pros:
+    - can be trained fast
+    - demonstrate that it is very important to initialize weights
+      sensibly
+    - good at modeling one-dimensional time-series
+      (but cannot compete high-dimensional data)
+  Cons:
+    - need many more hidden units
