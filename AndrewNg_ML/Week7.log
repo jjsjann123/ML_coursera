@@ -2,5 +2,30 @@
 
 --Alternative view of logistic regression-------------------------------
 * h_theta(x) = 1 / (1+exp(-Theta.T * x))
-  if y = 1, we want h_theta(x) closer to 1,
-	-> Theta.T*x >> 0
+  if y = 1, we want h_theta(x) closer to 1, Theta.T*x >> 0
+  similarly, if y = 0, Theta.T*x << 0
+
+* cost of example (cost function?):
+  -y*log(1/(1+exp(-Theta.T*x))) - (1-y)*log(1-1/(1+exp(-Theta.T*x)))
+             cost of 1                         cost of 0
+  replace cost function with:
+    cost_1(z) and cost_0(z)
+
+* Support Vector Machine
+  Cost Function:
+  min_Theta C*sum_i(y[i]cost_1(Theta.T*x[i])+(1-y[i])cost_0(Theta.T*x))
+			+ sum_j(Theta_j^2)
+
+  Hypothesis:
+  h_Theta(x) = 1 ,  if Theta.T*x >= 0
+			   0 ,  otherwise
+  
+--Large Margin Classifiers----------------------------------------------
+* objective of SVM
+    Theta.T*x >= 1 for y=1
+    Theta.T*x <=-1 for y=0
+
+* SVM Decision Boundary
+  - suppose C is very large
+    Theta.T*x >= 1 for y=1
+    Theta.T*x <=-1 for y=0
