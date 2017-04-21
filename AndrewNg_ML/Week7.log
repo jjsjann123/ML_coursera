@@ -14,7 +14,7 @@
 * Support Vector Machine
   Cost Function:
   min_Theta C*sum_i(y[i]cost_1(Theta.T*x[i])+(1-y[i])cost_0(Theta.T*x))
-			+ sum_j(Theta_j^2)
+			+ 1/2*sum_j(Theta_j^2)
 
   Hypothesis:
   h_Theta(x) = 1 ,  if Theta.T*x >= 0
@@ -29,3 +29,34 @@
   - suppose C is very large
     Theta.T*x >= 1 for y=1
     Theta.T*x <=-1 for y=0
+
+    * optimization problem becomes
+	  min_Theta 	1/2*sum_j(Theta_j^2)
+	  S.T. 			Theta.T*x[i] >= 1 if y[i] = 1
+	      			Theta.T*x[i] <=-1 if y[i] = 0
+	optimization leads to 
+	  Large margin classifier
+
+  - adjust C to accommodate outliers
+
+--The mathematics behind large margin classification--------------------
+* vector inner product
+  u.T * v = p * || u ||
+    where as:
+	  p = signed length of projection of v onto u
+	
+Formulation
+  min_Theta    1/2*sum_j(Theta_j^2)
+  S.T.         Theta.T*x[i] >= 1 if y[i] = 1
+               Theta.T*x[i] <=-1 if y[i] = 0
+			   
+simplify SVM with Theta_0 = 0 and n = 2;
+  Decision boundary is perpendicular to Theta;
+  Margin is determined by projection of x onto Theta;
+  
+  Since we are minimizing ||Theta||
+  -> maximize the minimum norm of projection of x onto Theta;
+  -> we are maximizing the margin
+
+--Kernels---------------------------------------------------------------
+* Non-linear Decision Boundary
